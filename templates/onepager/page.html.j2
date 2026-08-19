@@ -12,6 +12,7 @@
 .bodygrid { padding: 0.38in 0.75in 0; display: grid; grid-template-columns: 1fr 2.85in; gap: 0.36in; }
 .fill { flex: 1; }
 .credits { position: static; padding: 0 0.75in 7pt; }
+.credits.legal { padding-bottom: 2pt; color: var(--accentInk); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
 .cta { position: static; }
 </style>
 </head>
@@ -50,6 +51,7 @@
   </div>
 
   <div class="fill"></div>
+  {% if legal.footer %}<div class="credits legal">{{ legal.footer }}</div>{% endif %}
   {% if credits %}<div class="credits">{{ credits }}</div>{% endif %}
   {% include 'partials/cta.html.j2' %}
 </div>
