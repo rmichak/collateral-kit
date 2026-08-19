@@ -128,13 +128,31 @@ def build_card(brand: Brand, campaign: Campaign, spec: dict, index: int) -> Path
     # padding, so nothing can run off the edge however long the headline is.
     kicker = spec.get("kicker")
     headline = spec.get("headline", "")
+    subhead = spec.get("subhead")
     body_w = W - pad * 2
 
-    max_head_h = round(H * (0.34 if kind == "x_wide" else 0.42))
+    # With a subhead below it, the headline gets a smaller share of the height so
+    # the two tiers fit together; without one, the headline keeps its full budget
+    # so existing single-line cards render exactly as before.
+    if subhead:
+        max_head_h = round(H * (0.28 if kind == "x_wide" else 0.34))
+        head_start = round(H * (0.096 if kind == "x_wide" else 0.076))
+    else:
+        max_head_h = round(H * (0.34 if kind == "x_wide" else 0.42))
+        head_start = round(H * (0.105 if kind == "x_wide" else 0.082))
     hfont, hlines, leading = fit_headline(
         draw, headline, brand, body_w, max_head_h,
-        start=round(H * (0.105 if kind == "x_wide" else 0.082)),
-        min_size=round(H * 0.036))
+        start=head_start, min_size=round(H * 0.036))
+
+    # Optional subheading: smaller, lighter, wrapped under the headline. This is
+    # where the card says plainly what the product is.
+    sfont = slines = sleading = None
+    sub_gap = 0
+    if subhead:
+        sfont = load_font(brand, "display", 600, round(H * (0.033 if kind == "x_wide" else 0.028)))
+        slines = wrap_to_width(draw, subhead, sfont, body_w)
+        sleading = int(sfont.size * 1.30)
+        sub_gap = round(H * 0.024)
 
     rule_h = max(3, round(H * 0.005))
     rule_gap = round(H * 0.030)
@@ -146,7 +164,9 @@ def build_card(brand: Brand, campaign: Campaign, spec: dict, index: int) -> Path
         box = draw.textbbox((0, 0), kicker.upper(), font=kfont)
         chip_h = (box[3] - box[1]) + round(H * 0.009) * 2
 
-    stack_h = rule_h + rule_gap + (chip_h + chip_gap if kicker else 0) + len(hlines) * leading
+    stack_h = (rule_h + rule_gap + (chip_h + chip_gap if kicker else 0)
+               + len(hlines) * leading
+               + (sub_gap + len(slines) * sleading if subhead else 0))
     y = H - pad - stack_h
 
     # accent rule
@@ -170,6 +190,13 @@ def build_card(brand: Brand, campaign: Campaign, spec: dict, index: int) -> Path
     for line in hlines:
         draw.text((pad, y), line, font=hfont, fill=(255, 255, 255, 255))
         y += leading
+
+    # subheading
+    if subhead:
+        y += sub_gap
+        for line in slines:
+            draw.text((pad, y), line, font=sfont, fill=hex_to_rgb(brand.colors["onDark"]))
+            y += sleading
 
     out = campaign.out_dir / "social" / f"{social_name(campaign.slug, spec, index)}.jpg"
     out.parent.mkdir(parents=True, exist_ok=True)

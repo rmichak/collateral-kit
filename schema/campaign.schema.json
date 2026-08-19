@@ -135,6 +135,7 @@
           "name":     { "type": "string", "description": "Filename stem; defaults to kind + index" },
           "image":    { "type": "string", "description": "Key from images{}" },
           "headline": { "type": "string", "description": "Text burned into the card" },
+          "subhead":  { "type": "string", "description": "Small line under the headline; says plainly what it is" },
           "kicker":   { "type": "string" },
           "caption":  { "type": "string", "description": "Post copy. X is checked against 280 chars." }
         }
