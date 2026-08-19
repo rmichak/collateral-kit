@@ -1,0 +1,19 @@
+# Campaign output is generated; only the example's config is tracked.
+campaigns/*
+!campaigns/.gitkeep
+!campaigns/example-retainer/
+campaigns/example-retainer/*
+!campaigns/example-retainer/campaign.yaml
+
+# Brand packs are private to whoever owns the brand; only the example ships.
+brands/*
+!brands/.gitkeep
+!brands/_example/
+brands/_example/assets/fonts/
+
+.venv/
+node_modules/
+package-lock.json
+__pycache__/
+*.pyc
+.DS_Store

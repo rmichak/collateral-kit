@@ -1,0 +1,9 @@
+<div class="spread">
+  {% for it in p['items'] %}
+  <div class="cell">
+    {% if it.kicker %}<span class="kicker">{{ it.kicker }}</span>{% endif %}
+    <h3>{{ it.title }}</h3>
+    <p>{{ it.body }}</p>
+  </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ campaign.title }} — One-Pager</title>
+<style>
+{% include 'partials/base.css.j2' %}
+
+/* one-pager: the page is a flex column, so the CTA bar sits at the foot and
+   the credits line rides just above it no matter how the headline wraps. */
+.page { display: flex; flex-direction: column; }
+.bodygrid { padding: 0.38in 0.75in 0; display: grid; grid-template-columns: 1fr 2.85in; gap: 0.36in; }
+.fill { flex: 1; }
+.credits { position: static; padding: 0 0.75in 7pt; }
+.cta { position: static; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hero">
+    {% if hero_image %}<img class="photo" src="{{ hero_image }}" alt="{{ hero_alt }}">{% endif %}
+    <div class="scrim"></div>
+    <div class="content">
+      {% if lockup_light %}<img class="lockup" src="{{ lockup_light }}" alt="{{ brand.name }}">{% endif %}
+      <div class="spacer"></div>
+      {% if campaign.hero.chip %}<span class="chip">{{ campaign.hero.chip }}</span>{% endif %}
+      <h1>{{ campaign.hero.headline }}{% if campaign.hero.headline_accent %} <span class="ac">{{ campaign.hero.headline_accent }}</span>{% endif %}</h1>
+      {% if campaign.hero.sub %}<p class="sub">{{ campaign.hero.sub }}</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="bodygrid">
+    <div>
+      {% for f in campaign.features[:4] %}
+      <div class="feat">
+        <h3>{% if f.kicker %}<span class="k">{{ f.kicker }}</span>{% endif %}{{ f.title }}</h3>
+        <p>{{ f.body }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div>
+      {% include 'partials/price.html.j2' %}
+      {% if campaign.aside %}
+      <div class="aside">
+        {% if campaign.aside.kicker %}<span class="k">{{ campaign.aside.kicker }}</span>{% endif %}
+        <p>{{ campaign.aside.body }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="fill"></div>
+  {% if credits %}<div class="credits">{{ credits }}</div>{% endif %}
+  {% include 'partials/cta.html.j2' %}
+</div>
+</body>
+</html>

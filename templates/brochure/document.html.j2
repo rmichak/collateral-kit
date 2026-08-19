@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ campaign.title }} — Brochure</title>
+<style>
+{% include 'partials/base.css.j2' %}
+
+/* ---- brochure cover: taller hero, full bleed ---- */
+.cover .hero { height: 11in; }
+.cover .hero .content { padding: 0.75in 0.75in 0.85in; }
+.cover .hero h1 { font-size: 44pt; line-height: 1.02; max-width: 6.4in; }
+.cover .hero .sub { font-size: 13pt; max-width: 5.6in; margin-top: 12pt; }
+.cover .hero .lockup { height: 0.36in; }
+.cover .footline { position: absolute; left: 0.75in; right: 0.75in; bottom: 0.42in;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--onDarkDim); }
+
+/* ---- interior chrome ---- */
+.sheet { padding: 0.72in 0.75in 1.05in; height: 100%; display: flex; flex-direction: column; }
+.sheet > .eyebrow { color: var(--accentInk); margin-bottom: 9pt; }
+.sheet > h2 { color: var(--ink); font-size: 26pt; line-height: 1.1; font-weight: 700;
+  letter-spacing: -0.02em; max-width: 6.2in; }
+.sheet > h2 .ac { color: var(--accentInk); }
+.sheet > .intro { font-size: 11pt; line-height: 1.5; margin-top: 10pt; max-width: 5.9in; color: var(--body); }
+.sheet .grow { flex: 1; }
+.pagefoot { position: absolute; left: 0.75in; right: 0.75in; bottom: 0.5in;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--rule); padding-top: 7pt;
+  font-family: var(--mono); font-size: 7pt; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); }
+
+/* ---- layout: feature-spread ---- */
+.spread { margin-top: 20pt; display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.34in; }
+.spread .cell { padding: 12pt 0; border-top: 1px solid var(--rule); }
+.spread .cell .kicker { display: block; margin-bottom: 4pt; }
+.spread .cell h3 { color: var(--ink); font-size: 13pt; font-weight: 700;
+  letter-spacing: -0.01em; margin-bottom: 4pt; }
+.spread .cell p { font-size: 9.5pt; line-height: 1.55; }
+.figure { margin-top: 18pt; border-radius: 9pt; overflow: hidden; background: var(--paper2);
+  flex: 1 1 auto; min-height: 2.3in; }
+.figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---- layout: proof ---- */
+.proof-quote { margin-top: 26pt; padding: 26pt 30pt; background: var(--dark);
+  border-radius: 12pt; color: #fff; }
+.proof-quote p { font-size: 19pt; line-height: 1.32; font-weight: 600; letter-spacing: -0.01em; }
+.proof-quote p .ac { color: var(--accent); }
+.proof-quote .attrib { margin-top: 14pt; font-family: var(--mono); font-size: 8.5pt;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--onDarkDim); }
+
+/* ---- layout: steps ---- */
+.steps { margin-top: 22pt; counter-reset: step; }
+.steps .step { display: grid; grid-template-columns: 0.52in 1fr; gap: 0 14pt;
+  padding: 13pt 0; border-top: 1px solid var(--rule); align-items: start; }
+.steps .step::before { counter-increment: step; content: counter(step, decimal-leading-zero);
+  font-family: var(--mono); font-size: 15pt; font-weight: 500; color: var(--accentInk); line-height: 1; }
+.steps .step h3 { color: var(--ink); font-size: 13pt; font-weight: 700; margin-bottom: 4pt; }
+.steps .step p { font-size: 9.5pt; line-height: 1.55; }
+
+/* ---- layout: price ---- */
+.pricewrap { margin-top: 24pt; display: grid; grid-template-columns: 1fr 3.1in; gap: 0.4in; align-items: start; }
+.pricewrap .feat:first-child { border-top: 1px solid var(--rule); padding-top: 11pt; }
+
+/* ---- layout: gallery ---- */
+.gallery { margin-top: 20pt; display: grid; grid-template-columns: 1fr 1fr; gap: 0.24in; }
+.gallery figure { border-radius: 9pt; overflow: hidden; background: var(--paper2); }
+.gallery figure img { width: 100%; height: 2.05in; object-fit: cover; display: block; }
+.gallery figcaption { padding: 9pt 11pt 11pt; }
+.gallery figcaption h3 { color: var(--ink); font-size: 11pt; font-weight: 700; margin-bottom: 3pt; }
+.gallery figcaption p { font-size: 8.5pt; line-height: 1.5; }
+
+/* ---- closing page ---- */
+.closing { background: var(--dark); height: 100%; padding: 1.1in 0.75in 0.6in;
+  position: relative; display: flex; flex-direction: column; }
+.closing .eyebrow { color: var(--accent); }
+.closing h2 { color: #fff; font-size: 34pt; line-height: 1.08; font-weight: 700;
+  letter-spacing: -0.02em; margin-top: 10pt; max-width: 6.1in; }
+.closing h2 .ac { color: var(--accent); }
+.closing p.lede { color: var(--onDark); font-size: 12pt; line-height: 1.5;
+  margin-top: 14pt; max-width: 5.5in; }
+.closing .qrrow { margin-top: auto; margin-bottom: 0.5in; display: flex; gap: 22pt; }
+.closing .qrrow .qr { background: #fff; border-radius: 8pt; padding: 8pt 8pt 6pt;
+  display: flex; flex-direction: column; align-items: center; gap: 4pt; }
+.closing .qrrow .qr img { width: 1.15in; height: 1.15in; display: block; }
+.closing .qrrow .qr span { font-family: var(--mono); font-size: 6.5pt; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink); text-align: center; line-height: 1.3; max-width: 1.15in; }
+.closing .signoff { display: flex; justify-content: space-between; align-items: flex-end;
+  border-top: 1px solid var(--dark3); padding-top: 14pt; }
+.closing .signoff img { height: 0.32in; }
+.closing .signoff .fine { font-family: var(--mono); font-size: 6.5pt; letter-spacing: 0.06em;
+  color: var(--onDarkDim); text-align: right; max-width: 3.6in; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+{# ---------- cover ---------- #}
+<div class="page cover">
+  <div class="hero">
+    {% if hero_image %}<img class="photo" src="{{ hero_image }}" alt="{{ hero_alt }}">{% endif %}
+    <div class="scrim"></div>
+    <div class="content">
+      {% if lockup_light %}<img class="lockup" src="{{ lockup_light }}" alt="{{ brand.name }}">{% endif %}
+      <div class="spacer"></div>
+      {% if campaign.hero.chip %}<span class="chip">{{ campaign.hero.chip }}</span>{% endif %}
+      <h1>{{ campaign.hero.headline }}{% if campaign.hero.headline_accent %} <span class="ac">{{ campaign.hero.headline_accent }}</span>{% endif %}</h1>
+      {% if campaign.hero.sub %}<p class="sub">{{ campaign.hero.sub }}</p>{% endif %}
+    </div>
+    <div class="footline">
+      <span>{{ brand.name }}</span>
+      <span>{{ brand.brand.url | default('') }}</span>
+    </div>
+  </div>
+</div>
+
+{# ---------- interior pages ---------- #}
+{% for p in pages %}
+<div class="page">
+  <div class="sheet">
+    {% if p.eyebrow %}<div class="eyebrow">{{ p.eyebrow }}</div>{% endif %}
+    {% if p.title %}<h2>{{ p.title | accent }}</h2>{% endif %}
+    {% if p.intro %}<p class="intro">{{ p.intro }}</p>{% endif %}
+    {% include 'brochure/layout_' ~ p.layout | replace('-', '_') ~ '.html.j2' %}
+    {% if p.image %}
+    <div class="figure"><img src="{{ resolve_image(p.image) }}" alt="{{ image_alt(p.image) }}"></div>
+    {% else %}
+    <div class="grow"></div>
+    {% endif %}
+  </div>
+  <div class="pagefoot">
+    <span>{{ brand.name }}</span>
+    <span>{{ campaign.title }}</span>
+    <span>{{ loop.index + 1 }} / {{ pages | length + 2 }}</span>
+  </div>
+</div>
+{% endfor %}
+
+{# ---------- closing ---------- #}
+<div class="page">
+  <div class="closing">
+    <div class="eyebrow">{{ closing.eyebrow }}</div>
+    <h2>{{ closing.headline | accent }}</h2>
+    {% if closing.sub %}<p class="lede">{{ closing.sub }}</p>{% endif %}
+    <div class="qrrow">
+      {% for q in qrs %}
+      <div class="qr"><img src="{{ q.href }}" alt="QR to {{ q.url }}"><span>{{ q.caption }}</span></div>
+      {% endfor %}
+    </div>
+    <div class="signoff">
+      {% if lockup_light %}<img src="{{ lockup_light }}" alt="{{ brand.name }}">{% endif %}
+      <div class="fine">{% if credits %}{{ credits }}<br>{% endif %}{{ brand.legal.footer | default('') }}</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

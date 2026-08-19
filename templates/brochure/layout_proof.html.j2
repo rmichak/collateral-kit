@@ -1,0 +1,15 @@
+<div class="proof-quote">
+  <p>{{ p.quote | accent }}</p>
+  {% if p.attrib %}<div class="attrib">{{ p.attrib }}</div>{% endif %}
+</div>
+{% if p['items'] %}
+<div class="spread">
+  {% for it in p['items'] %}
+  <div class="cell">
+    {% if it.kicker %}<span class="kicker">{{ it.kicker }}</span>{% endif %}
+    <h3>{{ it.title }}</h3>
+    <p>{{ it.body }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

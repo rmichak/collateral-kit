@@ -1,0 +1,14 @@
+<div class="cta">
+  <div class="l">
+    <h3>{{ (campaign.cta.headline or cta_target.label) | accent }}</h3>
+    {% if campaign.cta.sub or cta_target.display %}
+    <p>{{ campaign.cta.sub | default('') }}{% if cta_target.display %}{% if campaign.cta.sub %} {% endif %}<a href="{{ cta_target.url }}">{{ cta_target.display }}</a>{% endif %}</p>
+    {% endif %}
+  </div>
+  <div class="r">
+    {% for q in qrs %}
+    <div class="qr"><img src="{{ q.href }}" alt="QR to {{ q.url }}"><span>{{ q.caption }}</span></div>
+    {% endfor %}
+    {% if lockup_light %}<img class="lk" src="{{ lockup_light }}" alt="{{ brand.name }}">{% endif %}
+  </div>
+</div>

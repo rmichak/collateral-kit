@@ -1,0 +1,87 @@
+# Example brand pack — a fictional studio, shipped so the repo is self-testing.
+# Copy this directory to brands/<your-brand>/ and change the values.
+# Nothing else in the kit hard-codes a colour, a font, or a URL.
+
+brand:
+  name: Northwind Studio
+  tagline: Design and build for small operators
+  url: northwind.example
+  contact: hello@northwind.example
+
+# Semantic tokens, not colour names. Templates reference the role
+# (--accent, --dark, --paper), so a rebrand is this block and nothing else.
+colors:
+  ink:        "#15201B"   # headlines on light
+  body:       "#33403A"   # body copy on light
+  muted:      "#6B7A72"   # credits, fine print
+  paper:      "#FBFAF7"   # page background
+  paper2:     "#F1EFE8"   # alternate band
+  rule:       "#E0DDD2"   # hairlines
+  dark:       "#0B1A14"   # hero / CTA panel
+  dark2:      "#12281F"   # raised surface on dark
+  dark3:      "#1E3A2D"   # borders on dark
+  onDark:     "#E8F0EA"   # body copy on dark
+  onDarkDim:  "#9AAEA2"   # secondary copy on dark
+  accent:     "#4ADE9B"   # primary accent, used on dark
+  accentInk:  "#0F7A52"   # accent legible on light
+  accentDeep: "#0A4A33"   # accent text inside tint blocks
+  accentTint: "#E6F4EC"   # pale accent block
+  highlight:  "#E2A03F"   # eyebrow chip
+
+fonts:
+  display:
+    family: Figtree
+    google: Figtree
+    weights: [400, 600, 700]
+    stack: "'Helvetica Neue', Arial, sans-serif"
+  mono:
+    family: IBM Plex Mono
+    google: IBM Plex Mono
+    weights: [400, 500]
+    stack: "Menlo, Consolas, monospace"
+
+assets:
+  lockup_light: assets/lockup-light.png   # wordmark for dark backgrounds
+  lockup_dark:  assets/lockup-dark.png    # wordmark for light backgrounds
+
+# Named call-to-action targets. Any URL works: a payment link, a booking page,
+# a contact form. QR codes and CTA panels resolve against these names.
+cta:
+  primary:
+    label: Book a 20-minute call
+    url: https://northwind.example/book
+    display: northwind.example/book
+  buy:
+    label: Start the project
+    url: https://northwind.example/start
+    display: northwind.example/start
+  proof:
+    label: See the work
+    url: https://northwind.example/work
+    display: northwind.example/work
+
+# Copy rules the drafting skills follow.
+voice:
+  person: second
+  rules:
+    - Lead with the reader's problem, not the offer's name.
+    - Concrete nouns over adjectives. Name the actual task being removed.
+    - One idea per feature row. If it needs a semicolon, it is two rows.
+    - Prices are stated plainly or not at all. Never "starting at" hedging.
+  avoid:
+    - leverage, synergy, unlock, empower, seamless, cutting-edge, revolutionise
+    - exclamation marks
+    - claims about clients or results that have not happened
+
+legal:
+  footer: "© Northwind Studio. Prices held 30 days from the date on this sheet."
+  credits_prefix: "Imagery:"
+
+images:
+  provider: auto
+  style: >-
+    natural available light, shallow depth of field, muted desaturated palette
+    with a single warm accent, documentary framing, real workspaces, no text
+  negative: >-
+    no logos, no readable screen text, no stock-photo smiling, no watermarks,
+    no distorted hands, no crowds

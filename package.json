@@ -1,0 +1,13 @@
+{
+  "name": "collateral-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HTML-to-PDF rendering for collateral-kit",
+  "type": "module",
+  "scripts": {
+    "render": "node scripts/render_pdf.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.0.0"
+  }
+}

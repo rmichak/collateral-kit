@@ -1,0 +1,19 @@
+{
+  "name": "collateral-kit",
+  "owner": { "name": "Randy Michak", "email": "rmichak@gmail.com" },
+  "metadata": {
+    "description": "Repeatable, brand-agnostic marketing collateral for Claude Code.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "collateral-kit",
+      "source": "./",
+      "description": "Print brochures, one-pagers, Facebook/X cards and captions from a brand pack plus a campaign file.",
+      "version": "0.1.0",
+      "author": { "name": "Randy Michak", "email": "rmichak@gmail.com" },
+      "keywords": ["marketing", "brochure", "one-pager", "social", "pdf", "branding"],
+      "category": "productivity"
+    }
+  ]
+}

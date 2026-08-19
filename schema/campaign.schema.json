@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Campaign",
+  "type": "object",
+  "required": ["slug", "title", "hero"],
+  "properties": {
+    "slug":  { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string", "description": "Human name, used in filenames and the index" },
+    "audience": { "type": "string", "description": "Who this is for. Shown on the review board." },
+    "purpose":  { "type": "string", "description": "What this piece is meant to do. Shown on the review board." },
+    "status":   { "type": "string", "enum": ["draft", "for-review", "approved", "retired"], "default": "draft" },
+    "draft_marker": { "type": "boolean", "default": false, "description": "Stamp DRAFT FOR REVIEW across the pieces" },
+
+    "hero": {
+      "type": "object",
+      "required": ["headline"],
+      "properties": {
+        "chip":            { "type": "string", "description": "Eyebrow chip, uppercase" },
+        "headline":        { "type": "string" },
+        "headline_accent": { "type": "string", "description": "Second clause, rendered in the accent colour" },
+        "sub":             { "type": "string" },
+        "image":           { "type": "string", "description": "Key from images{}" },
+        "focal":           { "type": "string", "default": "center 35%", "description": "CSS object-position" }
+      }
+    },
+
+    "features": {
+      "type": "array",
+      "description": "Feature rows. The one-pager uses the first 4.",
+      "items": {
+        "type": "object",
+        "required": ["title", "body"],
+        "properties": {
+          "kicker": { "type": "string", "description": "Small mono label before the title" },
+          "title":  { "type": "string" },
+          "body":   { "type": "string" }
+        }
+      }
+    },
+
+    "price": {
+      "type": "object",
+      "properties": {
+        "mode":   { "type": "string", "enum": ["card", "negotiable", "none"], "default": "none" },
+        "was":    { "type": "string" },
+        "amount": { "type": "string" },
+        "label":  { "type": "string" },
+        "note":   { "type": "string" },
+        "secondary": {
+          "type": "object",
+          "description": "An anchoring second option shown beside the lead price",
+          "properties": { "amount": { "type": "string" }, "label": { "type": "string" }, "note": { "type": "string" } }
+        }
+      }
+    },
+
+    "aside": {
+      "type": "object",
+      "properties": { "kicker": { "type": "string" }, "body": { "type": "string" } }
+    },
+
+    "cta": {
+      "type": "object",
+      "properties": {
+        "headline": { "type": "string" },
+        "sub":      { "type": "string" },
+        "target":   { "type": "string", "description": "Name of a cta entry in brand.yaml" }
+      }
+    },
+
+    "qr": {
+      "type": "array",
+      "description": "QR codes to render. Target names resolve against brand.yaml cta{}.",
+      "items": {
+        "type": "object",
+        "required": ["target"],
+        "properties": {
+          "target":  { "type": "string" },
+          "caption": { "type": "string" },
+          "url":     { "type": "string", "description": "Overrides the brand cta url" }
+        }
+      }
+    },
+
+    "pages": {
+      "type": "array",
+      "description": "Brochure interior pages, in order. The cover and CTA page are automatic.",
+      "items": {
+        "type": "object",
+        "required": ["layout"],
+        "properties": {
+          "layout":  { "type": "string", "enum": ["feature-spread", "proof", "steps", "price", "gallery"] },
+          "eyebrow": { "type": "string" },
+          "title":   { "type": "string" },
+          "intro":   { "type": "string" },
+          "image":   { "type": "string" },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kicker": { "type": "string" }, "title": { "type": "string" },
+                "body":   { "type": "string" }, "image": { "type": "string" }
+              }
+            }
+          },
+          "quote":  { "type": "string" },
+          "attrib": { "type": "string" }
+        }
+      }
+    },
+
+    "images": {
+      "type": "object",
+      "description": "Named image slots. file is relative to the campaign's assets/ dir.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["file"],
+        "properties": {
+          "file":   { "type": "string" },
+          "prompt": { "type": "string", "description": "Generation prompt, provider-agnostic" },
+          "aspect": { "type": "string", "enum": ["1:1", "3:2", "2:3", "16:9", "4:5"], "default": "3:2" },
+          "alt":    { "type": "string" }
+        }
+      }
+    },
+
+    "social": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "image"],
+        "properties": {
+          "kind":     { "type": "string", "enum": ["fb_square", "x_wide", "ig_portrait"] },
+          "name":     { "type": "string", "description": "Filename stem; defaults to kind + index" },
+          "image":    { "type": "string", "description": "Key from images{}" },
+          "headline": { "type": "string", "description": "Text burned into the card" },
+          "kicker":   { "type": "string" },
+          "caption":  { "type": "string", "description": "Post copy. X is checked against 280 chars." }
+        }
+      }
+    }
+  }
+}

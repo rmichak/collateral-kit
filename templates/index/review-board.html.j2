@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ brand.name }} — Review Board</title>
+<style>
+{% include 'index/shared.css.j2' %}
+.bar { position: sticky; top: 0; z-index: 40; background: var(--dark2);
+  border-bottom: 1px solid var(--dark3); padding: 12px 40px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.bar .count { font-family: var(--mono); font-size: 12px; color: var(--onDarkDim); }
+.bar .count b { color: var(--accent); }
+.btn { font: inherit; font-size: 13px; padding: 7px 14px; border-radius: 8px;
+  border: 1px solid var(--dark3); background: var(--dark); color: var(--onDark); cursor: pointer; }
+.btn:hover { border-color: var(--accent); color: #fff; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--dark); font-weight: 600; }
+.statuses { display: flex; gap: 6px; flex-wrap: wrap; }
+.st { font: inherit; font-size: 11px; font-family: var(--mono); letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 5px 9px; border-radius: 7px; cursor: pointer;
+  border: 1px solid var(--rule); background: #fff; color: var(--muted); }
+.st[aria-pressed="true"] { color: #fff; border-color: transparent; font-weight: 600; }
+.st[data-v="approve"][aria-pressed="true"] { background: {{ colors.accentInk }}; }
+.st[data-v="refresh"][aria-pressed="true"] { background: {{ colors.highlight }}; color: {{ colors.dark }}; }
+.st[data-v="reject"][aria-pressed="true"]  { background: #b4232a; }
+.st[data-v="retire"][aria-pressed="true"]  { background: {{ colors.muted }}; }
+.card.decided-approve { border-color: {{ colors.accentInk }}; }
+.card.decided-refresh { border-color: {{ colors.highlight }}; }
+.card.decided-reject  { border-color: #b4232a; }
+.card.decided-retire  { opacity: 0.62; }
+textarea { width: 100%; min-height: 62px; resize: vertical; font: inherit; font-size: 13px;
+  padding: 9px 10px; border: 1px solid var(--rule); border-radius: 8px; color: var(--body);
+  background: var(--paper); }
+textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.enlarge { background: none; border: 0; color: var(--accentInk); font: inherit; font-size: 12px;
+  cursor: pointer; padding: 0; text-decoration: underline; }
+.vis { cursor: zoom-in; }
+dialog.light { border: 0; padding: 0; width: 94vw; height: 94vh; max-width: none; max-height: none;
+  background: var(--dark); border-radius: 14px; }
+dialog.light::backdrop { background: rgba(6,10,8,0.82); }
+dialog.light .frame { width: 100%; height: calc(100% - 58px); }
+dialog.light .frame embed, dialog.light .frame iframe, dialog.light .frame img {
+  width: 100%; height: 100%; border: 0; object-fit: contain; background: var(--dark); }
+dialog.light .foot { height: 58px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px; color: var(--onDark); font-size: 13px; }
+.toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  background: var(--dark); color: #fff; padding: 11px 18px; border-radius: 9px;
+  font-size: 13px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 90; }
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="eyebrow">Review board</div>
+  <h1>{{ brand.name }}</h1>
+  <p>Mark every piece. Notes save as you type, in this browser only — nothing is
+     uploaded. When you are done, copy the digest and paste it back into the chat.</p>
+</header>
+
+<div class="bar">
+  <span class="count"><b id="decided">0</b> of {{ assets | length }} decided</span>
+  <button class="btn primary" id="copy">Copy digest for Claude</button>
+  <button class="btn" id="download">Download JSON</button>
+  <button class="btn" id="reset">Clear my decisions</button>
+</div>
+
+<main>
+<div class="grid">
+  {% for a in assets %}
+  <div class="card" data-id="{{ a.id }}">
+    <div class="vis" data-src="{{ a.href }}" data-kind="{{ a.kind }}" data-name="{{ a.name }}">
+      {% if a.thumb %}<img src="{{ a.thumb }}" alt="{{ a.name }}">
+      {% elif a.kind == 'pdf' %}<embed src="{{ a.href }}" type="application/pdf">
+      {% else %}<span class="pill">no preview</span>{% endif %}
+    </div>
+    <div class="meta">
+      <div class="kind">{{ a.campaign }} · {{ a.kind }}</div>
+      <h3>{{ a.name }}</h3>
+      <dl>
+        <dt>Purpose</dt><dd>{{ a.purpose }}</dd>
+        <dt>Audience</dt><dd>{{ a.audience }}</dd>
+      </dl>
+      <div class="statuses">
+        {% for v in ['approve', 'refresh', 'reject', 'retire'] %}
+        <button class="st" data-v="{{ v }}" aria-pressed="false">{{ v }}</button>
+        {% endfor %}
+      </div>
+      <textarea placeholder="What should change?" aria-label="Notes on {{ a.name }}"></textarea>
+      <div class="links">
+        <a href="{{ a.href }}">Open</a>
+        {% if a.caption_href %}<a href="{{ a.caption_href }}">Caption</a>{% endif %}
+        <button class="enlarge">⤢ Larger</button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</main>
+
+<dialog class="light" id="lightbox">
+  <div class="frame" id="frame"></div>
+  <div class="foot">
+    <span id="lightname"></span>
+    <button class="btn" id="closebox">Back to notes</button>
+  </div>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY = {{ storage_key | tojson }};
+const STAMP = {{ migration_key | tojson }};
+const ASSETS = {{ assets_json }};
+const state = load();
+
+function load() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(KEY) || "{}");
+    // A rebuilt asset is a new question: clear its verdict but keep the note
+    // that prompted the rebuild, so context is never lost.
+    if (raw.__stamp !== STAMP) {
+      for (const id of Object.keys(raw)) {
+        if (id.startsWith("__")) continue;
+        if (ASSETS.find(a => a.id === id && a.rebuilt)) raw[id].status = null;
+      }
+      raw.__stamp = STAMP;
+    }
+    return raw;
+  } catch { return { __stamp: STAMP }; }
+}
+
+function save() {
+  state.__stamp = STAMP;
+  localStorage.setItem(KEY, JSON.stringify(state));
+  const n = Object.keys(state).filter(k => !k.startsWith("__") && state[k].status).length;
+  document.getElementById("decided").textContent = n;
+}
+
+function entry(id) {
+  if (!state[id]) state[id] = { status: null, note: "" };
+  return state[id];
+}
+
+document.querySelectorAll(".card").forEach(card => {
+  const id = card.dataset.id;
+  const e = entry(id);
+  const note = card.querySelector("textarea");
+  note.value = e.note || "";
+  note.addEventListener("input", () => { entry(id).note = note.value; save(); });
+
+  card.querySelectorAll(".st").forEach(btn => {
+    const paint = () => {
+      const on = entry(id).status === btn.dataset.v;
+      btn.setAttribute("aria-pressed", String(on));
+      card.classList.toggle("decided-" + btn.dataset.v, on);
+    };
+    btn.addEventListener("click", () => {
+      const cur = entry(id).status;
+      entry(id).status = cur === btn.dataset.v ? null : btn.dataset.v;  // click again to unset
+      card.querySelectorAll(".st").forEach(b => {
+        const on = entry(id).status === b.dataset.v;
+        b.setAttribute("aria-pressed", String(on));
+        card.classList.toggle("decided-" + b.dataset.v, on);
+      });
+      save();
+      if (entry(id).status === "refresh" || entry(id).status === "reject") note.focus();
+    });
+    paint();
+  });
+});
+
+/* ---- lightbox: a thumbnail is not enough to judge a printed page ---- */
+const box = document.getElementById("lightbox");
+const frame = document.getElementById("frame");
+function open(src, kind, name) {
+  frame.innerHTML = kind === "pdf"
+    ? `<embed src="${src}#view=FitH" type="application/pdf">`
+    : (kind === "html" ? `<iframe src="${src}"></iframe>` : `<img src="${src}" alt="${name}">`);
+  document.getElementById("lightname").textContent = name;
+  box.showModal();
+}
+document.querySelectorAll(".vis").forEach(v =>
+  v.addEventListener("click", () => open(v.dataset.src, v.dataset.kind, v.dataset.name)));
+document.querySelectorAll(".enlarge").forEach(btn =>
+  btn.addEventListener("click", () => {
+    const v = btn.closest(".card").querySelector(".vis");
+    open(v.dataset.src, v.dataset.kind, v.dataset.name);
+  }));
+function close() {
+  box.close();
+  frame.innerHTML = "";
+}
+document.getElementById("closebox").addEventListener("click", () => {
+  const focus = document.querySelector(".card textarea");
+  close();
+  if (focus) focus.focus();
+});
+box.addEventListener("click", ev => { if (ev.target === box) close(); });
+box.addEventListener("cancel", () => frame.innerHTML = "");
+
+/* ---- handing decisions back ---- */
+function digest() {
+  const by = { approve: [], refresh: [], reject: [], retire: [], undecided: [] };
+  for (const a of ASSETS) {
+    const e = state[a.id] || {};
+    const line = `- **${a.name}** (${a.campaign}, ${a.kind})` + (e.note ? ` — ${e.note.trim()}` : "");
+    (by[e.status] || by.undecided).push(line);
+  }
+  let out = `# Review digest — {{ brand.name }}\n\n`;
+  for (const k of ["approve", "refresh", "reject", "retire", "undecided"]) {
+    if (!by[k].length) continue;
+    out += `## ${k.toUpperCase()} (${by[k].length})\n${by[k].join("\n")}\n\n`;
+  }
+  return out;
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+document.getElementById("copy").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(digest());
+    toast("Digest copied — paste it into the chat.");
+  } catch {
+    // Clipboard is blocked on file:// in some browsers; fall back to a prompt.
+    window.prompt("Copy this digest:", digest());
+  }
+});
+
+document.getElementById("download").addEventListener("click", () => {
+  const payload = { brand: {{ brand.name | tojson }}, decisions: state, assets: ASSETS };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)],
+    { type: "application/json" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `review-decisions-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  if (!confirm("Clear every decision and note on this board?")) return;
+  localStorage.removeItem(KEY);
+  location.reload();
+});
+
+save();
+</script>
+</body>
+</html>

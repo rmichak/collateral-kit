@@ -1,0 +1,19 @@
+<div class="pricewrap">
+  <div>
+    {% for it in p['items'] %}
+    <div class="feat">
+      <h3>{% if it.kicker %}<span class="k">{{ it.kicker }}</span>{% endif %}{{ it.title }}</h3>
+      <p>{{ it.body }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  <div>
+    {% include 'partials/price.html.j2' %}
+    {% if campaign.aside %}
+    <div class="aside">
+      {% if campaign.aside.kicker %}<span class="k">{{ campaign.aside.kicker }}</span>{% endif %}
+      <p>{{ campaign.aside.body }}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>

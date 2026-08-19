@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ brand.name }} — Campaign Kit</title>
+<style>
+{% include 'index/shared.css.j2' %}
+.storage { background: var(--dark); color: var(--onDark); border-radius: 12px;
+  padding: 22px 26px; margin-top: 34px; font-size: 13px; }
+.storage h3 { color: #fff; font-size: 15px; margin-bottom: 10px; }
+.storage code { font-family: var(--mono); color: var(--accent); font-size: 12px; }
+.storage ol { margin: 10px 0 0 18px; }
+.storage li { margin-bottom: 6px; color: var(--onDarkDim); }
+.campaign-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  margin: 40px 0 4px; }
+.campaign-head h2 { font-size: 22px; color: var(--ink); font-weight: 700; letter-spacing: -0.02em; }
+.campaign-head .purpose { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="eyebrow">Campaign kit</div>
+  <h1>{{ brand.name }}</h1>
+  <p>Every piece built for this brand, what it is for, and where it lives.
+     Built {{ built }}. Regenerate with <code>make index BRAND={{ brand.slug }}</code>.</p>
+</header>
+<main>
+
+{% for c in campaigns %}
+<div class="campaign-head">
+  <h2>{{ c.title }}</h2>
+  <span class="pill">{{ c.status }}</span>
+  {% if c.purpose %}<span class="purpose">{{ c.purpose }}</span>{% endif %}
+</div>
+<div class="grid">
+  {% for a in c.assets %}
+  <div class="card">
+    <div class="vis">
+      {% if a.thumb %}<img src="{{ a.thumb }}" alt="{{ a.name }}">
+      {% elif a.kind == 'pdf' %}<embed src="{{ a.href }}" type="application/pdf">
+      {% else %}<span class="pill">no preview</span>{% endif %}
+    </div>
+    <div class="meta">
+      <div class="kind">{{ a.kind }}</div>
+      <h3>{{ a.name }}</h3>
+      <dl>
+        <dt>Purpose</dt><dd>{{ a.purpose }}</dd>
+        <dt>Audience</dt><dd>{{ a.audience }}</dd>
+      </dl>
+      <div class="links">
+        <a href="{{ a.href }}">Open</a>
+        {% if a.caption_href %}<a href="{{ a.caption_href }}">Caption</a>{% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}
+
+<div class="storage">
+  <h3>Where things live</h3>
+  <ol>
+    <li><code>brands/{{ brand.slug }}/brand.yaml</code> — colours, fonts, CTA URLs, voice rules. One file per brand.</li>
+    <li><code>campaigns/&lt;slug&gt;/campaign.yaml</code> — the words and the image prompts for one offer.</li>
+    <li><code>campaigns/&lt;slug&gt;/assets/</code> — generated imagery, QR codes and <code>CREDITS.txt</code>.</li>
+    <li><code>campaigns/&lt;slug&gt;/*.pdf</code> — the brochure and the one-pager.</li>
+    <li><code>campaigns/&lt;slug&gt;/social/</code> — cards and their captions, side by side.</li>
+    <li><code>campaigns/&lt;slug&gt;/proof/</code> — page rasters, for looking at before you ship.</li>
+  </ol>
+</div>
+</main>
+</body>
+</html>

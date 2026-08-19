@@ -1,0 +1,22 @@
+{%- set price = campaign.price | default({}) -%}
+{%- if price.mode == 'card' %}
+<div class="price-card">
+  {% if price.was %}<div class="was"><s>{{ price.was }}</s></div>{% endif %}
+  <div class="now">
+    <span class="amt">{{ price.amount }}</span>
+    {% if price.label %}<span class="lbl">{{ price.label }}</span>{% endif %}
+  </div>
+  {% if price.note %}<div class="how">{{ price.note }}</div>{% endif %}
+  {% if price.secondary %}
+  <div class="alt">
+    <div class="amt2">{{ price.secondary.amount }}</div>
+    <div class="lbl2">{% if price.secondary.label %}{{ price.secondary.label }}{% endif %}{% if price.secondary.note %} — {{ price.secondary.note }}{% endif %}</div>
+  </div>
+  {% endif %}
+</div>
+{%- elif price.mode == 'negotiable' %}
+<div class="price-negotiable">
+  <div class="h">{{ price.amount | default('Pricing — negotiable') }}</div>
+  {% if price.note %}<p>{{ price.note }}</p>{% endif %}
+</div>
+{%- endif %}

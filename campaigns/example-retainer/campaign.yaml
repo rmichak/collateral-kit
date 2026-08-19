@@ -1,0 +1,207 @@
+# Example campaign — ships with the repo so `make demo` proves the pipeline.
+# Copy this file, change the words, point it at your own brand pack.
+
+slug: example-retainer
+title: Website Care Plan
+audience: Owner-operators with a site they cannot maintain themselves
+purpose: Convert a one-off build into a monthly retainer
+status: draft
+draft_marker: false
+
+hero:
+  chip: WEBSITE CARE PLAN
+  headline: Your site should not be
+  headline_accent: your problem to babysit.
+  sub: >-
+    Updates, backups, uptime and the small fixes you keep meaning to get to —
+    handled monthly, by the people who built it.
+  image: cover
+  focal: center 40%
+
+features:
+  - kicker: We watch
+    title: The things that break quietly
+    body: >-
+      Expired certificates, a form that stopped emailing, a plugin that broke
+      checkout at 2am. We see it before your customers do.
+  - kicker: We update
+    title: Every month, on a schedule
+    body: >-
+      Platform, plugins and dependencies patched on a fixed day, tested on a
+      copy first, rolled back if anything moves.
+  - kicker: You ask
+    title: For the small changes, any time
+    body: >-
+      New hours, a price change, a photo swap, a page for the new service.
+      Send a message; it is live the same week.
+  - kicker: You keep
+    title: Everything, if you leave
+    body: >-
+      Your domain, your hosting, your code, your content. No lock-in and no
+      exit fee — the plan earns the month or it does not.
+
+price:
+  mode: card
+  was: "$260/mo"
+  amount: "$185"
+  label: per month
+  note: >-
+    <b>Month to month.</b> Cancel any time with 30 days' notice. Covers up to
+    two hours of changes; anything larger is quoted before we start.
+  secondary:
+    amount: "$1,850/yr"
+    label: Paid annually
+    note: two months free
+
+aside:
+  kicker: What it replaces
+  body: >-
+    The afternoon you lose every quarter trying to remember the login, and the
+    emergency call to somebody new when it is already down.
+
+cta:
+  eyebrow: Next step
+  headline: Twenty minutes, and *you will know if it fits.*
+  sub: >-
+    We look at your site together, tell you what it actually needs, and quote
+    it plainly. No audit fee, no deck.
+  target: primary
+
+qr:
+  - target: primary
+    caption: Scan to book
+  - target: proof
+    caption: See the work
+
+pages:
+  - layout: feature-spread
+    eyebrow: What you get
+    title: A site that stays *the way you left it.*
+    intro: >-
+      Most small business sites do not fail dramatically. They drift — a broken
+      form here, an unpatched plugin there — until one day the phone stops
+      ringing and nobody can say when it started.
+    image: work
+    items:
+      - kicker: Monitoring
+        title: Checked every five minutes
+        body: Uptime, certificate expiry and form delivery, watched around the clock.
+      - kicker: Backups
+        title: Nightly, kept 30 days
+        body: Stored off your host, restorable to any day in the last month.
+      - kicker: Updates
+        title: Tested before they land
+        body: Applied to a copy first. If something moves, it never reaches your site.
+      - kicker: Reporting
+        title: One short email a month
+        body: What changed, what broke, what we fixed. Plain language, no dashboard to learn.
+
+  - layout: steps
+    eyebrow: How it starts
+    title: Three weeks from *call to covered.*
+    items:
+      - title: The twenty-minute call
+        body: >-
+          You show us the site. We tell you what shape it is in and what the plan
+          would actually cover. If it does not need us, we say so.
+      - title: The take-over week
+        body: >-
+          We get access, take a full backup, patch what is overdue and write down
+          how your site is put together — so you are never dependent on one person.
+      - title: The monthly rhythm
+        body: >-
+          Updates on a fixed day, your changes as you send them, one email at the
+          end of the month. That is the whole thing.
+
+  - layout: price
+    eyebrow: What it costs
+    title: One number, *no surprises.*
+    image: team
+    items:
+      - kicker: Included
+        title: Two hours of changes a month
+        body: Copy edits, new pages, photo swaps, hours and pricing updates.
+      - kicker: Included
+        title: Emergency response
+        body: Site down or checkout broken — we start within the business day.
+      - kicker: Quoted first
+        title: Anything larger
+        body: A redesign, a new integration, a migration. Priced before we begin.
+
+  - layout: gallery
+    eyebrow: The work
+    title: Sites we look after *every month.*
+    items:
+      - image: work
+        title: Service businesses
+        body: Booking forms, service pages and the seasonal changes that come with them.
+      - image: team
+        title: Shops and studios
+        body: Inventory, hours, holiday closures and the checkout path behind them.
+
+images:
+  cover:
+    file: cover.jpg
+    aspect: "2:3"
+    alt: A small studio workspace at first light
+    prompt: >-
+      A quiet independent studio workspace just after opening, laptop showing a
+      simple website admin screen, coffee cooling beside it, morning light across
+      a wooden desk
+  work:
+    file: work.jpg
+    aspect: "3:2"
+    alt: Hands updating a website on a laptop
+    prompt: >-
+      Close over-the-shoulder view of hands editing a simple website on a laptop
+      at a workbench, notebook of scribbled changes beside the keyboard
+  team:
+    file: team.jpg
+    aspect: "3:2"
+    alt: Two people reviewing a site together
+    prompt: >-
+      Two people leaning over a single laptop in a small shop back room,
+      pointing at the screen, relaxed and mid-conversation
+  social_square:
+    file: social-square.jpg
+    aspect: "1:1"
+    alt: Studio desk at dawn
+    prompt: >-
+      An empty small business counter at dawn with a tablet propped showing a
+      clean website, calm and uncluttered, lots of negative space at the top
+  social_wide:
+    file: social-wide.jpg
+    aspect: "16:9"
+    alt: A workshop bench with a laptop
+    prompt: >-
+      A wide view of a workshop bench with a laptop open to a simple website,
+      tools set aside, warm side light, generous empty space on the left
+
+social:
+  - kind: fb_square
+    name: care-plan-fb-1
+    image: social_square
+    kicker: Website care plan
+    headline: Your site should not be your problem to babysit.
+    caption: |
+      Most small business sites do not fail dramatically. They drift.
+
+      A form stops emailing. A certificate expires. A plugin breaks checkout at
+      2am and nobody notices until Monday.
+
+      Our care plan is the boring fix: nightly backups, updates tested on a copy
+      first, uptime checked every five minutes, and two hours of changes a month
+      whenever you need them. $185/month, cancel any time, you keep everything.
+
+      Twenty-minute call and we will tell you honestly whether you need it.
+  - kind: x_wide
+    name: care-plan-x-1
+    image: social_wide
+    kicker: Website care plan
+    headline: Updates, backups, uptime. Handled.
+    caption: |
+      Small business sites rarely fail dramatically — they drift. Broken form,
+      expired cert, plugin that killed checkout at 2am.
+
+      Care plan: nightly backups, tested updates, 5-min uptime checks, 2hrs of
+      changes/mo. $185. Cancel any time.

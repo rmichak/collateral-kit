@@ -1,0 +1,7 @@
+{
+  "name": "collateral-kit",
+  "version": "0.1.0",
+  "description": "Brand-agnostic campaign collateral: print brochures, one-pagers, social cards and captions, generated from two YAML files.",
+  "author": { "name": "Randy Michak", "email": "rmichak@gmail.com" },
+  "keywords": ["marketing", "brochure", "one-pager", "social", "pdf", "branding"]
+}

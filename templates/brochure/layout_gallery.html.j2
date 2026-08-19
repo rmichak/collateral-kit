@@ -1,0 +1,11 @@
+<div class="gallery">
+  {% for it in p['items'] %}
+  <figure>
+    {% if it.image %}<img src="{{ resolve_image(it.image) }}" alt="{{ image_alt(it.image) }}">{% endif %}
+    <figcaption>
+      <h3>{{ it.title }}</h3>
+      <p>{{ it.body }}</p>
+    </figcaption>
+  </figure>
+  {% endfor %}
+</div>

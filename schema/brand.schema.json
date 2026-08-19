@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Brand pack",
+  "type": "object",
+  "required": ["brand", "colors", "fonts", "assets"],
+  "properties": {
+    "brand": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "url": { "type": "string" },
+        "contact": { "type": "string" }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "description": "Semantic design tokens. Emitted as CSS custom properties (--ink, --accent, ...) and read by the PIL social compositor.",
+      "required": ["ink", "body", "paper", "dark", "onDark", "accent"],
+      "additionalProperties": { "type": "string", "pattern": "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$" },
+      "properties": {
+        "ink":       { "type": "string", "description": "Headline text on light backgrounds" },
+        "body":      { "type": "string", "description": "Body copy on light backgrounds" },
+        "muted":     { "type": "string", "description": "Fine print, credits" },
+        "paper":     { "type": "string", "description": "Primary page background" },
+        "paper2":    { "type": "string", "description": "Alternate band background" },
+        "rule":      { "type": "string", "description": "Hairline dividers" },
+        "dark":      { "type": "string", "description": "Hero / CTA panel background" },
+        "dark2":     { "type": "string", "description": "Raised surface on dark" },
+        "dark3":     { "type": "string", "description": "Borders on dark" },
+        "onDark":    { "type": "string", "description": "Body copy on dark" },
+        "onDarkDim": { "type": "string", "description": "Secondary copy on dark" },
+        "accent":    { "type": "string", "description": "Primary accent, used on dark" },
+        "accentInk": { "type": "string", "description": "Accent legible on light backgrounds" },
+        "accentDeep":{ "type": "string", "description": "Accent text inside accentTint blocks" },
+        "accentTint":{ "type": "string", "description": "Pale accent block background" },
+        "highlight": { "type": "string", "description": "Eyebrow chip / attention colour" }
+      }
+    },
+    "fonts": {
+      "type": "object",
+      "required": ["display", "mono"],
+      "properties": {
+        "display": { "$ref": "#/definitions/font" },
+        "mono":    { "$ref": "#/definitions/font" }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "properties": {
+        "lockup_light": { "type": "string", "description": "Wordmark for dark backgrounds" },
+        "lockup_dark":  { "type": "string", "description": "Wordmark for light backgrounds" }
+      }
+    },
+    "cta": {
+      "type": "object",
+      "description": "Named call-to-action targets. Any URL: payment link, booking page, contact form.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label", "url"],
+        "properties": {
+          "label":   { "type": "string" },
+          "url":     { "type": "string" },
+          "display": { "type": "string", "description": "How the URL reads in print, e.g. northwind.studio/start" }
+        }
+      }
+    },
+    "voice": {
+      "type": "object",
+      "description": "Copy rules the skills follow when drafting. Free-form guidance.",
+      "properties": {
+        "person":   { "type": "string" },
+        "rules":    { "type": "array", "items": { "type": "string" } },
+        "avoid":    { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "legal": {
+      "type": "object",
+      "properties": {
+        "footer": { "type": "string" },
+        "credits_prefix": { "type": "string" }
+      }
+    },
+    "images": {
+      "type": "object",
+      "properties": {
+        "provider": { "type": "string", "enum": ["auto", "higgsfield", "openai", "replicate", "manual"] },
+        "style":    { "type": "string", "description": "Style clause appended to every image prompt" },
+        "negative": { "type": "string", "description": "What must never appear in generated imagery" }
+      }
+    }
+  },
+  "definitions": {
+    "font": {
+      "type": "object",
+      "required": ["family"],
+      "properties": {
+        "family":  { "type": "string" },
+        "google":  { "type": "string", "description": "Google Fonts family name; omit for a self-hosted face" },
+        "weights": { "type": "array", "items": { "type": "integer" } },
+        "stack":   { "type": "string", "description": "CSS fallback stack" }
+      }
+    }
+  }
+}
