@@ -44,8 +44,17 @@ git clone git@github.com:rmichak/collateral-kit.git
 cd collateral-kit
 make setup                    # venv + python deps + puppeteer-core
 make doctor BRAND=_example    # tells you exactly what is missing, if anything
-make demo                     # builds the shipped example end to end
+make demo                     # fetches fonts, builds the shipped example end to end
 ```
+
+`make demo` finishes with one deliberate failure — it builds with placeholder
+imagery, and `verify.py` refuses to pass placeholder art. That is the gate
+working. Configure an image provider, or supply your own files, and it clears.
+
+**Fonts are fetched, not committed.** A licensed typeface is not ours to
+redistribute, so `brands/*/assets/fonts/` is gitignored and
+`make fonts BRAND=<brand>` pulls the faces named in `brand.yaml` from Google
+Fonts on first use.
 
 ---
 

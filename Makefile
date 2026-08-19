@@ -63,8 +63,10 @@ campaign: images build pdf social proof index
 	@$(RUN) scripts/verify.py $(SLUG) --brand $(BRAND) || true
 	@echo "\nOpen the board: file://$(PWD)/campaigns/_index/review-board.html"
 
-demo:
-	@$(MAKE) campaign SLUG=example-retainer BRAND=_example
+# Fonts are fetched, never committed — a licensed face is not ours to
+# redistribute. The demo pulls them first so a fresh clone works in one step.
+demo: fonts
+	@$(MAKE) campaign SLUG=example-retainer BRAND=_example PROVIDER=placeholder
 
 clean:
 	@rm -rf campaigns/*/proof campaigns/_index
