@@ -22,6 +22,10 @@ Writes `campaigns/<slug>/social/<name>.jpg` and `<name>.txt` side by side.
 | `fb_square` | 2048 × 2048 | 63,206 |
 | `x_wide` | 1600 × 900 | 280 |
 | `ig_portrait` | 1080 × 1350 | 2,200 |
+| `li_square` | 1200 × 1200 | 3,000 |
+| `li_landscape` | 1200 × 627 | 3,000 |
+
+LinkedIn favours the square in-feed; the landscape matches its link-preview size.
 
 `verify.py` fails the build on a caption over its limit — X in particular.
 
