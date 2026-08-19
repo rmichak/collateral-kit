@@ -202,6 +202,18 @@ brands/_example/    a fictional brand, so the repo is self-testing
 campaigns/          output (gitignored, except the shipped example)
 ```
 
+## Your brands stay yours
+
+`.gitignore` excludes `brands/*` and `campaigns/*` by default — only the
+fictional `_example` brand and its demo campaign are tracked. Client palettes,
+logos, prices, URLs and artwork stay on your machine unless you deliberately
+add them. Keep it that way: a brand pack holds a client's pricing and links.
+
 ## Licence
 
-Private. © Randy Michak.
+MIT. See [LICENSE](LICENSE).
+
+Bundled dependencies keep their own licences: puppeteer-core (Apache-2.0),
+Jinja2 / Pillow / fontTools / PyYAML / qrcode / jsonschema (BSD- or
+MIT-style). Fonts are downloaded at build time from Google Fonts under their
+own terms and are never redistributed by this repository.
