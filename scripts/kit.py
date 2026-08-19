@@ -45,9 +45,11 @@ COLOR_FALLBACKS = {
 # Pixel dimensions per social surface. Kept here rather than in the templates
 # because both the compositor and the caption linter need them.
 SOCIAL_SPECS = {
-    "fb_square":   {"size": (2048, 2048), "limit": 63206, "label": "Facebook square"},
-    "x_wide":      {"size": (1600, 900),  "limit": 280,   "label": "X / Twitter card"},
-    "ig_portrait": {"size": (1080, 1350), "limit": 2200,  "label": "Instagram portrait"},
+    "fb_square":    {"size": (2048, 2048), "limit": 63206, "label": "Facebook square"},
+    "x_wide":       {"size": (1600, 900),  "limit": 280,   "label": "X / Twitter card"},
+    "ig_portrait":  {"size": (1080, 1350), "limit": 2200,  "label": "Instagram portrait"},
+    "li_square":    {"size": (1200, 1200), "limit": 3000,  "label": "LinkedIn square"},
+    "li_landscape": {"size": (1200, 627),  "limit": 3000,  "label": "LinkedIn landscape"},
 }
 
 

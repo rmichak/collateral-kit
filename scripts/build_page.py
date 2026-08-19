@@ -140,6 +140,7 @@ def base_context(brand: Brand, campaign: Campaign, staged: dict, qrs: list[dict]
         "qrs": qrs,
         "cta_target": brand.cta(cta_name) if cta_name else {"label": "", "url": "", "display": ""},
         "credits": credits_line(brand, campaign),
+        "legal": brand.data.get("legal", {}),
         "draft_marker": bool(data.get("draft_marker")),
     })
 

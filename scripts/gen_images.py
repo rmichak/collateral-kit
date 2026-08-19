@@ -24,6 +24,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 import urllib.request
 from pathlib import Path
 
@@ -236,9 +237,16 @@ def main() -> int:
         return 0
     print(f"image providers, in order: {' -> '.join(order)}")
 
+    # A real provider can fail transiently (a 5xx, a dropped connection). Retry
+    # it a couple of times before falling through, so one blip does not quietly
+    # demote an image to a placeholder.
+    ATTEMPTS = {"higgsfield": 3, "openai": 3, "replicate": 3, "placeholder": 1}
+    real_providers = [p for p in order if p != "placeholder"]
+
     wanted = set(args.only.split(",")) if args.only else None
     images = campaign.data.get("images") or {}
     made = 0
+    fell_back = []
     for key, spec in images.items():
         if wanted and key not in wanted:
             continue
@@ -252,24 +260,43 @@ def main() -> int:
 
         prompt = full_prompt(brand, spec)
         aspect = spec.get("aspect", "3:2")
+        winner = None
         for provider in order:
-            print(f"  > {key} via {provider} ({aspect})")
-            try:
-                ok = (gen_placeholder(brand, prompt, out, aspect, key) if provider == "placeholder"
-                      else {"higgsfield": gen_higgsfield, "openai": gen_openai,
-                            "replicate": gen_replicate}[provider](prompt, out, aspect))
-            except Exception as exc:
-                print(f"    {provider} error: {exc}")
-                ok = False
-            if ok:
-                credit(campaign, f"{spec['file']}  {provider}  prompt: {prompt}")
-                print(f"    wrote {out.name}")
-                made += 1
+            for attempt in range(1, ATTEMPTS[provider] + 1):
+                suffix = f"  (retry {attempt - 1})" if attempt > 1 else ""
+                print(f"  > {key} via {provider} ({aspect}){suffix}")
+                try:
+                    ok = (gen_placeholder(brand, prompt, out, aspect, key) if provider == "placeholder"
+                          else {"higgsfield": gen_higgsfield, "openai": gen_openai,
+                                "replicate": gen_replicate}[provider](prompt, out, aspect))
+                except Exception as exc:
+                    print(f"    {provider} error: {exc}")
+                    ok = False
+                if ok:
+                    winner = provider
+                    break
+                if attempt < ATTEMPTS[provider]:
+                    time.sleep(2 * attempt)
+            if winner:
                 break
+        if winner:
+            credit(campaign, f"{spec['file']}  {winner}  prompt: {prompt}")
+            print(f"    wrote {out.name}")
+            made += 1
+            if winner == "placeholder" and real_providers:
+                fell_back.append(key)
         else:
             print(f"  ! {key}: every provider failed")
 
     print(f"done: {made} image(s). Look at each one before you ship it.")
+    if fell_back:
+        print()
+        print(f"  WARNING: {len(fell_back)} image(s) fell back to a branded placeholder "
+              f"because {' / '.join(real_providers)} failed: {', '.join(fell_back)}")
+        print( "  These are blank panels, not real art. Re-run once the provider is back,"
+               " e.g. `gen_images.py <campaign> --brand <brand> --only "
+              f"{','.join(fell_back)} --force`.")
+        return 1
     return 0
 
 

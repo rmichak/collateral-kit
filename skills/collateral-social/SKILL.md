@@ -22,14 +22,22 @@ Writes `campaigns/<slug>/social/<name>.jpg` and `<name>.txt` side by side.
 | `fb_square` | 2048 × 2048 | 63,206 |
 | `x_wide` | 1600 × 900 | 280 |
 | `ig_portrait` | 1080 × 1350 | 2,200 |
+| `li_square` | 1200 × 1200 | 3,000 |
+| `li_landscape` | 1200 × 627 | 3,000 |
+
+LinkedIn favours the square in-feed; the landscape matches its link-preview size.
 
 `verify.py` fails the build on a caption over its limit — X in particular.
 
 ## Card anatomy
 
-Wordmark top-left; accent rule, eyebrow chip and headline stacked up from the
-bottom. The whole stack is measured before it is drawn, so a long headline
-shrinks to fit rather than running off the edge.
+Wordmark top-left; accent rule, eyebrow chip, headline and an optional subhead
+stacked up from the bottom. The whole stack is measured before it is drawn, so a
+long headline shrinks to fit rather than running off the edge.
+
+The `headline` is the hook; the optional `subhead` is the small line that says
+plainly what the thing is. Use it when the headline alone would not tell a cold
+reader what they are looking at. Keep it to one short line or two.
 
 ```yaml
 social:
@@ -38,6 +46,7 @@ social:
     image: social_square      # a key from images:
     kicker: Website care plan
     headline: Your site should not be your problem to babysit.
+    subhead: Monthly updates, backups and small fixes, handled.
     caption: |
       ...
 ```
